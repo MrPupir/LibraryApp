@@ -1,0 +1,809 @@
+// Microsoft Visual C++ generated resource script.
+//
+#pragma code_page(65001)
+
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+#include "verrsrc.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Русский (Россия) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\LibraryApp.ico"
+
+IDR_LibraryAppTYPE      ICON                    "res\\LibraryAppDoc.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+
+IDB_PAPER               BITMAP                  "res\\paper.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    BUTTON      ID_APP_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU
+BEGIN
+    POPUP "📚 Бібліотека"
+    BEGIN
+        MENUITEM "🔐 Вхід",                     ID_32771
+        MENUITEM "📝 Реєстрація",               ID_32772
+        MENUITEM "🚪 Вийти з аккаунту",         ID_32773
+        MENUITEM SEPARATOR
+        MENUITEM "🏠 Головне меню",             ID_32775
+        MENUITEM "👤 Профіль",                  ID_32776
+        MENUITEM "🎛️ Фільтр / Сортування",     ID_32791
+    END
+    POPUP "🛠️ Адміністрування"
+    BEGIN
+        POPUP "📕 Книги"
+        BEGIN
+            MENUITEM "➕ Додати книгу",              ID_32777
+            MENUITEM "✏️ Редагувати книгу",         ID_32778
+            MENUITEM "🗑️ Видалити книгу",          ID_32779
+        END
+        POPUP "📁 Категорії"
+        BEGIN
+            MENUITEM "➕ Додати категорію",          ID_32788
+            MENUITEM "✏️ Редагувати категорію",     ID_32789
+            MENUITEM "🗑️ Видалити категорію",      ID_32790
+        END
+        POPUP "🏢 Філії"
+        BEGIN
+            MENUITEM "➕ Додати філію",              ID_32785
+            MENUITEM "✏️ Редагувати філію",         ID_32786
+            MENUITEM "🗑️ Видалити філію",          ID_32787
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "📊 Бронювання",               ID_32780
+    END
+    POPUP "📊 Аналітика"
+    BEGIN
+        MENUITEM "👁️ Переглянути",             ID_32784
+        MENUITEM SEPARATOR
+        MENUITEM "📈 Гістограма/Кругова",       ID_32781
+        MENUITEM "💻 3D/2D режим",              ID_32782
+        MENUITEM "🔄 Скинути вигляд",           ID_32783
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 200, 86
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Про програму"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,10,8,20,20
+    LTEXT           "LibraryApp v1.0",IDC_STATIC,36,8,156,10
+    LTEXT           "Система управління бібліотекою",IDC_STATIC,36,20,156,10
+    LTEXT           "з 3D візуалізацією та аналітикою",IDC_STATIC,36,32,156,10
+    LTEXT           "© 2026",IDC_STATIC,36,48,156,10
+    DEFPUSHBUTTON   "OK",IDOK,142,66,50,14,WS_GROUP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041904B0"
+        BEGIN
+            VALUE "CompanyName", "TODO: <Company name>"
+            VALUE "FileDescription", "LibraryApp"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "LibraryApp.exe"
+            VALUE "LegalCopyright", "TODO: (c) <Company name>.  Все права защищены."
+            VALUE "OriginalFilename", "LibraryApp.exe"
+            VALUE "ProductName", "TODO: <Название продукта>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x419, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDP_OLE_INIT_FAILED     "Не удалось выполнить инициализацию OLE.  Убедитесь в том, что используются правильные версии библиотек OLE."
+END
+
+STRINGTABLE
+BEGIN
+    IDR_MAINFRAME           "Бібліотека\n\nБібліотека\n\n\nLibraryApp.Document\nLibraryApp.Document"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_APP_TITLE       "Бібліотека"
+    AFX_IDS_IDLEMESSAGE     "Готово"
+END
+
+STRINGTABLE
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_NEW             "Создание нового документа\nСоздать"
+    ID_FILE_OPEN            "Открытие существующего документа\nОткрыть"
+    ID_FILE_CLOSE           "Закрытие активного документа\nЗакрыть"
+    ID_FILE_SAVE            "Сохранение активного документа\nСохранить"
+    ID_FILE_SAVE_AS         "Сохранение активного документа под новым именем\nСохранить как"
+    ID_FILE_PAGE_SETUP      "Изменение параметров печати\nПараметры страницы"
+    ID_FILE_PRINT_SETUP     "Изменение принтера и параметров печати\nНастройка печати"
+    ID_FILE_PRINT           "Печать активного документа\nПечать"
+    ID_FILE_PRINT_DIRECT    "Печать активного документа с использованием текущих параметров\nБыстрая печать"
+    ID_FILE_PRINT_PREVIEW   "Просмотр документа в полностраничном режиме\nПредварительный просмотр"
+END
+
+STRINGTABLE
+BEGIN
+    ID_APP_ABOUT            "Вывод сведений о программе, ее версии и авторских правах\nО программе"
+    ID_APP_EXIT             "Завершение работы приложения с запросом на сохранение документов\nВыход"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_MRU_FILE1       "Открытие данного документа"
+    ID_FILE_MRU_FILE2       "Открытие данного документа"
+    ID_FILE_MRU_FILE3       "Открытие данного документа"
+    ID_FILE_MRU_FILE4       "Открытие данного документа"
+    ID_FILE_MRU_FILE5       "Открытие данного документа"
+    ID_FILE_MRU_FILE6       "Открытие данного документа"
+    ID_FILE_MRU_FILE7       "Открытие данного документа"
+    ID_FILE_MRU_FILE8       "Открытие данного документа"
+    ID_FILE_MRU_FILE9       "Открытие данного документа"
+    ID_FILE_MRU_FILE10      "Открытие данного документа"
+    ID_FILE_MRU_FILE11      "Открытие данного документа"
+    ID_FILE_MRU_FILE12      "Открытие данного документа"
+    ID_FILE_MRU_FILE13      "Открытие данного документа"
+    ID_FILE_MRU_FILE14      "Открытие данного документа"
+    ID_FILE_MRU_FILE15      "Открытие данного документа"
+    ID_FILE_MRU_FILE16      "Открытие данного документа"
+END
+
+STRINGTABLE
+BEGIN
+    ID_NEXT_PANE            "Переход к следующей области окна\nСледующая область"
+    ID_PREV_PANE            "Возврат к предыдущей области окна\nПредыдущая область"
+END
+
+STRINGTABLE
+BEGIN
+    ID_WINDOW_SPLIT         "Разделение активного окна на области\nРазделить"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_CLEAR           "Удаление выделенного фрагмента\nУдалить"
+    ID_EDIT_CLEAR_ALL       "Полное удаление содержимого документа\nУдалить все"
+    ID_EDIT_COPY            "Копирование выделенного фрагмента в буфер обмена\nКопировать"
+    ID_EDIT_CUT             "Удаление выделенного фрагмента в буфер обмена\nВырезать"
+    ID_EDIT_FIND            "Поиск указанного текста\nНайти"
+    ID_EDIT_PASTE           "Вставка содержимого буфера обмена\nВставить"
+    ID_EDIT_REPEAT          "Повторение последнего действия\nПовторить"
+    ID_EDIT_REPLACE         "Замена заданного текста другим текстом\nЗаменить"
+    ID_EDIT_SELECT_ALL      "Выделение всего документа\nВыделить все"
+    ID_EDIT_UNDO            "Отмена последнего действия\nОтменить"
+    ID_EDIT_REDO            "Повторное выполнение последнего отмененного действия\nВернуть"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_TOOLBAR         "Отображение или скрытие панели инструментов\nПанель инструментов"
+    ID_VIEW_STATUS_BAR      "Показать или скрыть строку состояния\n Переключение строки состояния"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCSIZE          "Изменение размера окна"
+    AFX_IDS_SCMOVE          "Изменение положения окна"
+    AFX_IDS_SCMINIMIZE      "Свертывание окна в значок"
+    AFX_IDS_SCMAXIMIZE      "Развертывание окна до полного размера"
+    AFX_IDS_SCNEXTWINDOW    "Переход к следующему окну документа"
+    AFX_IDS_SCPREVWINDOW    "Переход к предыдущему окну документа"
+    AFX_IDS_SCCLOSE         "Закрытие активного окна с запросом на сохранение документов"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCRESTORE       "Восстановление исходных размеров окна"
+    AFX_IDS_SCTASKLIST      "Переход к списку задач"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Выход из режима предварительного просмотра\nОтменить просмотр"
+END
+
+#endif    // Русский (Россия) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Украинский (Украина) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_UKR)
+LANGUAGE LANG_UKRAINIAN, SUBLANG_DEFAULT
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_AUTH DIALOGEX 0, 0, 234, 158
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Автентифікація"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Логін:",IDC_STATIC,12,16,38,10
+    EDITTEXT        IDC_EDIT_LOGIN,54,14,168,14,ES_AUTOHSCROLL
+    LTEXT           "Пароль:",IDC_STATIC,12,34,38,10
+    EDITTEXT        IDC_EDIT_PASSWORD,54,32,168,14,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "Email:",IDC_LBL_EMAIL,12,54,38,10
+    EDITTEXT        IDC_EDIT_EMAIL,54,52,168,14,ES_AUTOHSCROLL
+    LTEXT           "Телефон:",IDC_LBL_PHONE,12,72,38,10
+    EDITTEXT        IDC_EDIT_PHONE,54,70,168,14,ES_AUTOHSCROLL
+    LTEXT           "ПІБ:",IDC_LBL_FULLNAME,12,90,38,10
+    EDITTEXT        IDC_EDIT_FULLNAME,54,88,168,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,124,138,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,178,138,50,14
+END
+
+IDD_FILTER DIALOGEX 0, 0, 210, 74
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Фільтр"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Фільтри застосовуються до пошуку книг",IDC_STATIC,14,16,184,10
+    DEFPUSHBUTTON   "Застосувати",IDOK,100,54,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,154,54,50,14
+END
+
+IDD_RESERVATION DIALOGEX 0, 0, 234, 104
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Бронювання"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Філія:",IDC_STATIC,12,18,36,10
+    COMBOBOX        IDC_COMBO_BRANCH,52,16,170,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Днів:",IDC_STATIC,12,38,36,10
+    EDITTEXT        IDC_EDIT_DAYS,52,36,50,14,ES_NUMBER
+    LTEXT           "(1–30)",IDC_STATIC,106,38,40,10
+    DEFPUSHBUTTON   "Забронювати",IDOK,118,82,54,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,176,82,50,14
+END
+
+IDD_ADD_REVIEW DIALOGEX 0, 0, 254, 154
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Відгук"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Оцінка:",IDC_STATIC,12,18,36,10
+    COMBOBOX        IDC_COMBO_RATING,52,16,56,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "(1–5)",IDC_STATIC,112,18,28,10
+    LTEXT           "Коментар:",IDC_STATIC,12,36,36,10
+    EDITTEXT        IDC_EDIT_COMMENT,52,34,190,84,ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL
+    DEFPUSHBUTTON   "Надіслати",IDOK,144,132,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,198,132,50,14
+END
+
+IDD_ADD_BOOK DIALOGEX 0, 0, 304, 234
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Додати книгу"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Назва:",IDC_STATIC,12,14,36,10
+    EDITTEXT        IDC_EDIT_BOOK_TITLE,52,12,240,14,ES_AUTOHSCROLL
+    LTEXT           "Автор:",IDC_STATIC,12,32,36,10
+    EDITTEXT        IDC_EDIT_BOOK_AUTHOR,52,30,240,14,ES_AUTOHSCROLL
+    LTEXT           "Рік:",IDC_STATIC,12,64,36,10
+    EDITTEXT        IDC_EDIT_BOOK_YEAR,52,62,50,14,ES_NUMBER
+    LTEXT           "Категорія:",IDC_STATIC,108,64,40,10
+    COMBOBOX        IDC_COMBO_BOOK_CATEGORY,152,62,140,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Посилання:",IDC_STATIC,12,82,36,10
+    EDITTEXT        IDC_EDIT_BOOK_COVER,52,80,240,14,ES_AUTOHSCROLL
+    LTEXT           "Всього:",IDC_STATIC,12,118,36,10
+    EDITTEXT        IDC_EDIT_BOOK_TOTAL,52,116,50,14,ES_NUMBER
+    LTEXT           "Доступно:",IDC_STATIC,108,118,40,10
+    EDITTEXT        IDC_EDIT_BOOK_AVAILABLE,152,116,50,14,ES_NUMBER
+    LTEXT           "Опис:",IDC_STATIC,12,136,36,10
+    EDITTEXT        IDC_EDIT_BOOK_DESC,52,134,240,64,ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL
+    DEFPUSHBUTTON   "Зберегти",IDOK,194,214,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,248,214,50,14
+END
+
+IDD_EDIT_BOOK DIALOGEX 0, 0, 304, 234
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Редагувати книгу"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Назва:",IDC_STATIC,12,14,36,10
+    EDITTEXT        IDC_EDIT_BOOK_TITLE,52,12,240,14,ES_AUTOHSCROLL
+    LTEXT           "Автор:",IDC_STATIC,12,32,36,10
+    EDITTEXT        IDC_EDIT_BOOK_AUTHOR,52,30,240,14,ES_AUTOHSCROLL
+    LTEXT           "Рік:",IDC_STATIC,12,64,36,10
+    EDITTEXT        IDC_EDIT_BOOK_YEAR,52,62,50,14,ES_NUMBER
+    LTEXT           "Категорія:",IDC_STATIC,108,64,40,10
+    COMBOBOX        IDC_COMBO_BOOK_CATEGORY,152,62,140,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Посилання:",IDC_STATIC,12,82,36,10
+    EDITTEXT        IDC_EDIT_BOOK_COVER,52,80,240,14,ES_AUTOHSCROLL
+    LTEXT           "Всього:",IDC_STATIC,12,118,36,10
+    EDITTEXT        IDC_EDIT_BOOK_TOTAL,52,116,50,14,ES_NUMBER
+    LTEXT           "Доступно:",IDC_STATIC,108,118,40,10
+    EDITTEXT        IDC_EDIT_BOOK_AVAILABLE,152,116,50,14,ES_NUMBER
+    LTEXT           "Опис:",IDC_STATIC,12,136,36,10
+    EDITTEXT        IDC_EDIT_BOOK_DESC,52,134,240,64,ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL
+    DEFPUSHBUTTON   "Зберегти",IDOK,194,214,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,248,214,50,14
+END
+
+IDD_USERS_AND_RESERVATIONS DIALOGEX 0, 0, 460, 280
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Бронювання"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LIST_USERS_RES,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,6,4,448,248
+    PUSHBUTTON      "Змінити статус",IDC_BUTTON_CHANGE_STATUS,6,258,66,16
+    DEFPUSHBUTTON   "Закрити",IDOK,404,258,50,16
+END
+
+IDD_DELETE_BOOK DIALOGEX 0, 0, 200, 80
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Видалити книгу"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "ID книги:",IDC_STATIC,12,16,38,10
+    EDITTEXT        IDC_EDIT_BOOK_ID,54,14,60,14,ES_NUMBER
+    LTEXT           "Цю дію не скасувати",IDC_STATIC,14,34,174,10
+    DEFPUSHBUTTON   "Видалити",IDOK,90,60,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,144,60,50,14
+END
+
+IDD_ADD_BRANCH DIALOGEX 0, 0, 224, 88
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Додати філію"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Назва:",IDC_STATIC,12,16,36,10
+    EDITTEXT        IDC_EDIT_BRANCH_NAME,52,14,160,14,ES_AUTOHSCROLL
+    LTEXT           "Адреса:",IDC_STATIC,12,34,36,10
+    EDITTEXT        IDC_EDIT_BRANCH_ADDRESS,52,32,160,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Зберегти",IDOK,114,66,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,168,66,50,14
+END
+
+IDD_EDIT_BRANCH DIALOGEX 0, 0, 224, 106
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Редагувати філію"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Філія:",IDC_STATIC,12,16,36,10
+    COMBOBOX        IDC_COMBO_BRANCH_SELECT,52,14,160,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Назва:",IDC_STATIC,12,34,36,10
+    EDITTEXT        IDC_EDIT_BRANCH_NAME,52,32,160,14,ES_AUTOHSCROLL
+    LTEXT           "Адреса:",IDC_STATIC,12,52,36,10
+    EDITTEXT        IDC_EDIT_BRANCH_ADDRESS,52,50,160,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Зберегти",IDOK,114,86,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,168,86,50,14
+END
+
+IDD_DELETE_BRANCH DIALOGEX 0, 0, 210, 72
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Видалити філію"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Філія:",IDC_STATIC,12,16,36,10
+    COMBOBOX        IDC_COMBO_BRANCH_SELECT,52,14,146,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "Видалити",IDOK,100,52,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,154,52,50,14
+END
+
+IDD_ADD_CATEGORY DIALOGEX 0, 0, 210, 66
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Додати категорію"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Назва:",IDC_STATIC,12,14,36,10
+    EDITTEXT        IDC_EDIT_CATEGORY_NAME,52,12,146,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Зберегти",IDOK,100,46,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,154,46,50,14
+END
+
+IDD_EDIT_CATEGORY DIALOGEX 0, 0, 210, 88
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Редагувати категорію"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Обрати:",IDC_STATIC,12,16,36,10
+    COMBOBOX        IDC_COMBO_CATEGORY_SELECT,52,14,146,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Назва:",IDC_STATIC,12,34,36,10
+    EDITTEXT        IDC_EDIT_CATEGORY_NAME,52,32,146,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Зберегти",IDOK,100,68,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,154,68,50,14
+END
+
+IDD_DELETE_CATEGORY DIALOGEX 0, 0, 210, 72
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Видалити категорію"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT           "Категорія:",IDC_STATIC,12,16,36,10
+    COMBOBOX        IDC_COMBO_CATEGORY_SELECT,52,14,146,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "Видалити",IDOK,100,52,50,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,154,52,50,14
+END
+
+IDD_EDIT_REVIEW DIALOGEX 0, 0, 309, 176
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "ОК",IDOK,198,155,50,14
+    PUSHBUTTON      "Отмена",IDCANCEL,252,155,50,14
+END
+
+IDD_DELETE_REVIEW DIALOGEX 0, 0, 309, 176
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "ОК",IDOK,198,155,50,14
+    PUSHBUTTON      "Отмена",IDCANCEL,252,155,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_AUTH, DIALOG
+    BEGIN
+    END
+
+    IDD_FILTER, DIALOG
+    BEGIN
+    END
+
+    IDD_RESERVATION, DIALOG
+    BEGIN
+    END
+
+    IDD_ADD_REVIEW, DIALOG
+    BEGIN
+    END
+
+    IDD_ADD_BOOK, DIALOG
+    BEGIN
+    END
+
+    IDD_EDIT_BOOK, DIALOG
+    BEGIN
+    END
+
+    IDD_USERS_AND_RESERVATIONS, DIALOG
+    BEGIN
+    END
+
+    IDD_DELETE_BOOK, DIALOG
+    BEGIN
+    END
+
+    IDD_ADD_BRANCH, DIALOG
+    BEGIN
+    END
+
+    IDD_EDIT_BRANCH, DIALOG
+    BEGIN
+    END
+
+    IDD_DELETE_BRANCH, DIALOG
+    BEGIN
+    END
+
+    IDD_ADD_CATEGORY, DIALOG
+    BEGIN
+    END
+
+    IDD_EDIT_CATEGORY, DIALOG
+    BEGIN
+    END
+
+    IDD_DELETE_CATEGORY, DIALOG
+    BEGIN
+    END
+
+    IDD_EDIT_REVIEW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 302
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 169
+    END
+
+    IDD_DELETE_REVIEW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 302
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 169
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "#include ""verrsrc.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)\r\n"
+    "LANGUAGE 25, 1\r\n"
+    "#include ""res\\LibraryApp.rc2""  // РЎР‚Р ВµРЎРѓРЎС“РЎР‚РЎРѓРЎвЂ№, Р Р…Р Вµ РЎР‚Р ВµР Т‘Р В°Р С”РЎвЂљР С‘РЎР‚РЎС“Р ВµР СРЎвЂ№Р Вµ Р Р† Microsoft Visual C++\r\n"
+    "#include ""l.RUS\\afxres.rc""      // Р РЋРЎвЂљР В°Р Р…Р Т‘Р В°РЎР‚РЎвЂљР Р…РЎвЂ№Р Вµ Р С”Р С•Р СР С—Р С•Р Р…Р ВµР Р…РЎвЂљРЎвЂ№\r\n"
+    "#include ""l.RUS\\afxprint.rc""    // РЎР‚Р ВµРЎРѓРЎС“РЎР‚РЎРѓРЎвЂ№ Р Т‘Р В»РЎРЏ Р С—Р ВµРЎвЂЎР В°РЎвЂљР С‘/Р С—РЎР‚Р ВµР Т‘Р Р†Р В°РЎР‚Р С‘РЎвЂљР ВµР В»РЎРЉР Р…Р С•Р С–Р С• Р С—РЎР‚Р С•РЎРѓР СР С•РЎвЂљРЎР‚Р В°\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_AUTH AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_FILTER AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_RESERVATION AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ADD_REVIEW AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ADD_BOOK AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_EDIT_BOOK AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_USERS_AND_RESERVATIONS AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DELETE_BOOK AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ADD_BRANCH AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_EDIT_BRANCH AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DELETE_BRANCH AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ADD_CATEGORY AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_EDIT_CATEGORY AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DELETE_CATEGORY AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_EDIT_REVIEW AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DELETE_REVIEW AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // Украинский (Украина) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE 25, 1
+#include "res\LibraryApp.rc2"  // РЎР‚Р ВµРЎРѓРЎС“РЎР‚РЎРѓРЎвЂ№, Р Р…Р Вµ РЎР‚Р ВµР Т‘Р В°Р С”РЎвЂљР С‘РЎР‚РЎС“Р ВµР СРЎвЂ№Р Вµ Р Р† Microsoft Visual C++
+#include "l.RUS\afxres.rc"      // Р РЋРЎвЂљР В°Р Р…Р Т‘Р В°РЎР‚РЎвЂљР Р…РЎвЂ№Р Вµ Р С”Р С•Р СР С—Р С•Р Р…Р ВµР Р…РЎвЂљРЎвЂ№
+#include "l.RUS\afxprint.rc"    // РЎР‚Р ВµРЎРѓРЎС“РЎР‚РЎРѓРЎвЂ№ Р Т‘Р В»РЎРЏ Р С—Р ВµРЎвЂЎР В°РЎвЂљР С‘/Р С—РЎР‚Р ВµР Т‘Р Р†Р В°РЎР‚Р С‘РЎвЂљР ВµР В»РЎРЉР Р…Р С•Р С–Р С• Р С—РЎР‚Р С•РЎРѓР СР С•РЎвЂљРЎР‚Р В°
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
