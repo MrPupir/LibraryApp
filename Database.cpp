@@ -1015,9 +1015,6 @@ bool Database::ReserveBook(int bookId, int days, const CString& branchName, CStr
             return false;
         }
 
-        CString updateSql;
-        updateSql.Format(_T("UPDATE books SET quantity_available=quantity_available-1 WHERE id=%d"), bookId);
-        m_conn->Execute(_bstr_t(updateSql), nullptr, adCmdText | adExecuteNoRecords);
 
         CString insertSql;
         insertSql.Format(
@@ -1704,6 +1701,348 @@ std::vector<CategoryStat> Database::GetUserActivityStats() const
     return stats;
 }
 
+std::vector<CategoryStat> Database::GetReservationStatusStats() const
+{
+    std::vector<CategoryStat> stats;
+    if (!const_cast<Database*>(this)->Connect()) return stats;
+
+    try
+    {
+        CString sql =
+            _T("SELECT ")
+            _T("CASE status ")
+            _T("WHEN 'reserved' THEN 'Заброньовано' ")
+            _T("WHEN 'ready_for_pickup' THEN 'Готово до видачі' ")
+            _T("WHEN 'issued' THEN 'Видано' ")
+            _T("WHEN 'overdue' THEN 'Прострочено' ")
+            _T("WHEN 'return_requested' THEN 'Повернення' ")
+            _T("WHEN 'returned' THEN 'Повернено' ")
+            _T("WHEN 'cancelled' THEN 'Скасовано' ")
+            _T("WHEN 'lost' THEN 'Втрачено' ")
+            _T("WHEN 'damaged' THEN 'Пошкоджено' ")
+            _T("ELSE status END AS status_name, ")
+            _T("COUNT(*) AS cnt ")
+            _T("FROM reservations GROUP BY status ORDER BY cnt DESC, status_name");
+
+        _RecordsetPtr rs;
+        rs.CreateInstance(__uuidof(Recordset));
+        rs->Open(_bstr_t(sql), _variant_t((IDispatch*)m_conn), adOpenForwardOnly, adLockReadOnly, adCmdText);
+
+        while (!rs->ADO_EOF)
+        {
+            CategoryStat s;
+            s.name = AdoFieldStr(rs, (short)0);
+            s.count = AdoFieldInt(rs, (short)1);
+            stats.push_back(s);
+            rs->MoveNext();
+        }
+        rs->Close();
+    }
+    catch (_com_error&) {}
+
+    return stats;
+}
+
+std::vector<CategoryStat> Database::GetRatingDistributionStats() const
+{
+    std::vector<CategoryStat> stats;
+    if (!const_cast<Database*>(this)->Connect()) return stats;
+
+    try
+    {
+        CString sql =
+            _T("SELECT rating, COUNT(*) AS cnt ")
+            _T("FROM reviews GROUP BY rating ORDER BY rating");
+
+        _RecordsetPtr rs;
+        rs.CreateInstance(__uuidof(Recordset));
+        rs->Open(_bstr_t(sql), _variant_t((IDispatch*)m_conn), adOpenForwardOnly, adLockReadOnly, adCmdText);
+
+        while (!rs->ADO_EOF)
+        {
+            int rating = AdoFieldInt(rs, (short)0);
+            int count = AdoFieldInt(rs, (short)1);
+            CategoryStat s;
+            CString label;
+            label.Format(_T("%d"), rating);
+            s.name = label;
+            s.count = count;
+            stats.push_back(s);
+            rs->MoveNext();
+        }
+        rs->Close();
+    }
+    catch (_com_error&) {}
+
+    return stats;
+}
+
+std::vector<CategoryStat> Database::GetBooksByDecadeStats() const
+{
+    std::vector<CategoryStat> stats;
+    if (!const_cast<Database*>(this)->Connect()) return stats;
+
+    try
+    {
+        CString sql =
+            _T("SELECT CAST((year/10)*10 AS INT) AS decade, COUNT(*) AS cnt ")
+            _T("FROM books WHERE year > 0 GROUP BY decade ORDER BY decade");
+
+        _RecordsetPtr rs;
+        rs.CreateInstance(__uuidof(Recordset));
+        rs->Open(_bstr_t(sql), _variant_t((IDispatch*)m_conn), adOpenForwardOnly, adLockReadOnly, adCmdText);
+
+        while (!rs->ADO_EOF)
+        {
+            int decade = AdoFieldInt(rs, (short)0);
+            int count = AdoFieldInt(rs, (short)1);
+            CategoryStat s;
+            CString label;
+            label.Format(_T("%d-і"), decade);
+            s.name = label;
+            s.count = count;
+            stats.push_back(s);
+            rs->MoveNext();
+        }
+        rs->Close();
+    }
+    catch (_com_error&) {}
+
+    return stats;
+}
+
+std::vector<CategoryStat> Database::GetBranchReservationStats(int limit) const
+{
+    std::vector<CategoryStat> stats;
+    if (!const_cast<Database*>(this)->Connect()) return stats;
+
+    try
+    {
+        CString sql;
+        sql.Format(
+            _T("SELECT br.name, COUNT(r.id) AS cnt ")
+            _T("FROM branches br LEFT JOIN reservations r ON r.branch_id=br.id ")
+            _T("GROUP BY br.id, br.name ORDER BY cnt DESC, br.name LIMIT %d"),
+            limit);
+
+        _RecordsetPtr rs;
+        rs.CreateInstance(__uuidof(Recordset));
+        rs->Open(_bstr_t(sql), _variant_t((IDispatch*)m_conn), adOpenForwardOnly, adLockReadOnly, adCmdText);
+
+        while (!rs->ADO_EOF)
+        {
+            CategoryStat s;
+            s.name = AdoFieldStr(rs, (short)0);
+            s.count = AdoFieldInt(rs, (short)1);
+            stats.push_back(s);
+            rs->MoveNext();
+        }
+        rs->Close();
+    }
+    catch (_com_error&) {}
+
+    return stats;
+}
+
+std::vector<CategoryStat> Database::GetCategoryAvailabilityStats() const
+{
+    std::vector<CategoryStat> stats;
+    if (!const_cast<Database*>(this)->Connect()) return stats;
+
+    try
+    {
+        CString sql =
+            _T("SELECT c.name, COALESCE(SUM(b.quantity_available),0) AS cnt ")
+            _T("FROM categories c LEFT JOIN books b ON b.category_id=c.id ")
+            _T("GROUP BY c.id, c.name ORDER BY cnt DESC, c.name");
+
+        _RecordsetPtr rs;
+        rs.CreateInstance(__uuidof(Recordset));
+        rs->Open(_bstr_t(sql), _variant_t((IDispatch*)m_conn), adOpenForwardOnly, adLockReadOnly, adCmdText);
+
+        while (!rs->ADO_EOF)
+        {
+            CategoryStat s;
+            s.name = AdoFieldStr(rs, (short)0);
+            s.count = AdoFieldInt(rs, (short)1);
+            stats.push_back(s);
+            rs->MoveNext();
+        }
+        rs->Close();
+    }
+    catch (_com_error&) {}
+
+    return stats;
+}
+
+std::vector<CategoryStat> Database::GetUsersByRoleStats() const
+{
+    std::vector<CategoryStat> stats;
+    if (!const_cast<Database*>(this)->Connect()) return stats;
+
+    try
+    {
+        CString sql =
+            _T("SELECT COALESCE(NULLIF(TRIM(role),''),'(none)') AS role_name, COUNT(*) AS cnt ")
+            _T("FROM users GROUP BY role_name ORDER BY cnt DESC, role_name");
+
+        _RecordsetPtr rs;
+        rs.CreateInstance(__uuidof(Recordset));
+        rs->Open(_bstr_t(sql), _variant_t((IDispatch*)m_conn), adOpenForwardOnly, adLockReadOnly, adCmdText);
+
+        while (!rs->ADO_EOF)
+        {
+            CategoryStat s;
+            s.name = AdoFieldStr(rs, (short)0);
+            s.count = AdoFieldInt(rs, (short)1);
+            stats.push_back(s);
+            rs->MoveNext();
+        }
+        rs->Close();
+    }
+    catch (_com_error&) {}
+
+    return stats;
+}
+
+std::vector<CategoryStat> Database::GetBooksByAuthorStats(int limit) const
+{
+    std::vector<CategoryStat> stats;
+    if (!const_cast<Database*>(this)->Connect()) return stats;
+
+    try
+    {
+        CString sql;
+        sql.Format(
+            _T("SELECT COALESCE(NULLIF(TRIM(author),''),'(невідомо)') AS author_name, COUNT(*) AS cnt ")
+            _T("FROM books GROUP BY author_name ORDER BY cnt DESC, author_name LIMIT %d"),
+            limit);
+
+        _RecordsetPtr rs;
+        rs.CreateInstance(__uuidof(Recordset));
+        rs->Open(_bstr_t(sql), _variant_t((IDispatch*)m_conn), adOpenForwardOnly, adLockReadOnly, adCmdText);
+
+        while (!rs->ADO_EOF)
+        {
+            CategoryStat s;
+            s.name = AdoFieldStr(rs, (short)0);
+            s.count = AdoFieldInt(rs, (short)1);
+            stats.push_back(s);
+            rs->MoveNext();
+        }
+        rs->Close();
+    }
+    catch (_com_error&) {}
+
+    return stats;
+}
+
+std::vector<CategoryStat> Database::GetReservationsByMonthStats(int limit) const
+{
+    std::vector<CategoryStat> stats;
+    if (!const_cast<Database*>(this)->Connect()) return stats;
+
+    try
+    {
+        CString sql;
+        sql.Format(
+            _T("SELECT strftime('%%Y-%%m', reservation_date) AS ym, COUNT(*) AS cnt ")
+            _T("FROM reservations WHERE reservation_date IS NOT NULL AND reservation_date <> '' ")
+            _T("GROUP BY ym ORDER BY ym DESC LIMIT %d"),
+            limit);
+
+        _RecordsetPtr rs;
+        rs.CreateInstance(__uuidof(Recordset));
+        rs->Open(_bstr_t(sql), _variant_t((IDispatch*)m_conn), adOpenForwardOnly, adLockReadOnly, adCmdText);
+
+        while (!rs->ADO_EOF)
+        {
+            CategoryStat s;
+            s.name = AdoFieldStr(rs, (short)0);
+            s.count = AdoFieldInt(rs, (short)1);
+            stats.push_back(s);
+            rs->MoveNext();
+        }
+        rs->Close();
+        std::reverse(stats.begin(), stats.end());
+    }
+    catch (_com_error&) {}
+
+    return stats;
+}
+
+std::vector<CategoryStat> Database::GetReviewsByMonthStats(int limit) const
+{
+    std::vector<CategoryStat> stats;
+    if (!const_cast<Database*>(this)->Connect()) return stats;
+
+    try
+    {
+        CString sql;
+        sql.Format(
+            _T("SELECT strftime('%%Y-%%m', created_at) AS ym, COUNT(*) AS cnt ")
+            _T("FROM reviews WHERE created_at IS NOT NULL AND created_at <> '' ")
+            _T("GROUP BY ym ORDER BY ym DESC LIMIT %d"),
+            limit);
+
+        _RecordsetPtr rs;
+        rs.CreateInstance(__uuidof(Recordset));
+        rs->Open(_bstr_t(sql), _variant_t((IDispatch*)m_conn), adOpenForwardOnly, adLockReadOnly, adCmdText);
+
+        while (!rs->ADO_EOF)
+        {
+            CategoryStat s;
+            s.name = AdoFieldStr(rs, (short)0);
+            s.count = AdoFieldInt(rs, (short)1);
+            stats.push_back(s);
+            rs->MoveNext();
+        }
+        rs->Close();
+        std::reverse(stats.begin(), stats.end());
+    }
+    catch (_com_error&) {}
+
+    return stats;
+}
+
+std::vector<CategoryStat> Database::GetBooksByRatingBucketStats() const
+{
+    std::vector<CategoryStat> stats;
+    if (!const_cast<Database*>(this)->Connect()) return stats;
+
+    try
+    {
+        CString sql =
+            _T("SELECT ")
+            _T("CASE ")
+            _T("WHEN rating < 1 THEN '0-1' ")
+            _T("WHEN rating < 2 THEN '1-2' ")
+            _T("WHEN rating < 3 THEN '2-3' ")
+            _T("WHEN rating < 4 THEN '3-4' ")
+            _T("ELSE '4-5' END AS bucket, ")
+            _T("COUNT(*) AS cnt ")
+            _T("FROM books GROUP BY bucket ")
+            _T("ORDER BY CASE bucket WHEN '0-1' THEN 1 WHEN '1-2' THEN 2 WHEN '2-3' THEN 3 WHEN '3-4' THEN 4 ELSE 5 END");
+
+        _RecordsetPtr rs;
+        rs.CreateInstance(__uuidof(Recordset));
+        rs->Open(_bstr_t(sql), _variant_t((IDispatch*)m_conn), adOpenForwardOnly, adLockReadOnly, adCmdText);
+
+        while (!rs->ADO_EOF)
+        {
+            CategoryStat s;
+            s.name = AdoFieldStr(rs, (short)0);
+            s.count = AdoFieldInt(rs, (short)1);
+            stats.push_back(s);
+            rs->MoveNext();
+        }
+        rs->Close();
+    }
+    catch (_com_error&) {}
+
+    return stats;
+}
+
 AnalyticsData Database::GetAnalytics() const
 {
     AnalyticsData data;
@@ -1880,37 +2219,6 @@ void Database::UpdateReservationStatus(int reservationId, const CString& newStat
         CString sql;
         sql.Format(_T("UPDATE reservations SET status=%s WHERE id=%d"), Quote(normalizedStatus).GetString(), reservationId);
         m_conn->Execute(_bstr_t(sql), nullptr, adCmdText | adExecuteNoRecords);
-
-        bool wasActive = IsInventoryActiveStatus(oldStatus);
-        bool nowActive = IsInventoryActiveStatus(normalizedStatus);
-        bool shouldReturnCopy = IsInventoryReturnStatus(normalizedStatus);
-
-        if (wasActive && !nowActive && shouldReturnCopy)
-        {
-            CString bookIdStr;
-            CString sql2;
-            sql2.Format(_T("SELECT book_id FROM reservations WHERE id=%d"), reservationId);
-            if (QueryScalar(m_conn, sql2, bookIdStr, nullptr))
-            {
-                int bookId = _ttoi(bookIdStr);
-                CString updateSql;
-                updateSql.Format(_T("UPDATE books SET quantity_available=quantity_available+1 WHERE id=%d"), bookId);
-                m_conn->Execute(_bstr_t(updateSql), nullptr, adCmdText | adExecuteNoRecords);
-            }
-        }
-        else if (!wasActive && nowActive)
-        {
-            CString bookIdStr;
-            CString sql2;
-            sql2.Format(_T("SELECT book_id FROM reservations WHERE id=%d"), reservationId);
-            if (QueryScalar(m_conn, sql2, bookIdStr, nullptr))
-            {
-                int bookId = _ttoi(bookIdStr);
-                CString updateSql;
-                updateSql.Format(_T("UPDATE books SET quantity_available=quantity_available-1 WHERE id=%d AND quantity_available>0"), bookId);
-                m_conn->Execute(_bstr_t(updateSql), nullptr, adCmdText | adExecuteNoRecords);
-            }
-        }
     }
     catch (_com_error&) {}
 }

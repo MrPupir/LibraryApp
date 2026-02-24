@@ -81,7 +81,6 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "🏠 Головне меню",             ID_32775
         MENUITEM "👤 Профіль",                  ID_32776
-        MENUITEM "🎛️ Фільтр / Сортування",     ID_32791
     END
     POPUP "🛠️ Адміністрування"
     BEGIN

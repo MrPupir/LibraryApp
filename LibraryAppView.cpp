@@ -98,7 +98,6 @@ BEGIN_MESSAGE_MAP(CLibraryAppView, CView)
     ON_COMMAND(ID_32788, &CLibraryAppView::OnCmdAddCategory)
     ON_COMMAND(ID_32789, &CLibraryAppView::OnCmdEditCategory)
     ON_COMMAND(ID_32790, &CLibraryAppView::OnCmdDeleteCategory)
-    ON_COMMAND(ID_32791, &CLibraryAppView::OnCmdFilterSort)
 END_MESSAGE_MAP()
 
 CLibraryAppView::CLibraryAppView() noexcept : m_db(Database::Instance()) {
@@ -117,7 +116,7 @@ CLibraryAppView::CLibraryAppView() noexcept : m_db(Database::Instance()) {
     m_bookAspect = 0.75f;
     m_screen = SCREEN_AUTH_REQUIRED;
     m_currentPage = 0;
-    m_pageSize = 6;
+    m_pageSize = 3;
     m_totalPages = 1;
     m_chartPieMode = false;
     m_chart3DMode = true;
@@ -129,8 +128,8 @@ CLibraryAppView::CLibraryAppView() noexcept : m_db(Database::Instance()) {
     m_profileContextReservationId = 0;
     m_profileContextReviewId = 0;
 
-    m_tableHeaderH = 28;
-    m_tableRowH = 26;
+    m_tableHeaderH = 40;
+    m_tableRowH = 30;
     m_tableHoverRow = -1;
 
     m_listBase = 0;
@@ -142,6 +141,8 @@ CLibraryAppView::CLibraryAppView() noexcept : m_db(Database::Instance()) {
     m_detailsBookId = 0;
     m_detailsScrollY = 0.0f;
     m_profileScrollY = 0.0f;
+    m_detailsCardW = 860;
+    m_detailsCardH = 560;
 }
 
 CLibraryAppView::~CLibraryAppView() {}
@@ -158,9 +159,9 @@ int CLibraryAppView::OnCreate(LPCREATESTRUCT lpCreateStruct) {
     m_hRC = wglCreateContext(m_pDC->GetSafeHdc());
     wglMakeCurrent(m_pDC->GetSafeHdc(), m_hRC);
 
-    m_fontNormal.CreateFont(15, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_SWISS, _T("Segoe UI"));
-    m_fontBold.CreateFont(15, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_SWISS, _T("Segoe UI"));
-    m_fontTitle.CreateFont(20, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_SWISS, _T("Segoe UI"));
+    m_fontNormal.CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_SWISS, _T("Segoe UI"));
+    m_fontBold.CreateFont(20, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_SWISS, _T("Segoe UI"));
+    m_fontTitle.CreateFont(40, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FF_SWISS, _T("Segoe UI"));
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
@@ -283,6 +284,19 @@ void CLibraryAppView::OnSize(UINT nType, int cx, int cy) {
     int tableW = cx - 20;
     int tableX = 10;
     m_tableRect = CRect(tableX, 36, tableX + tableW, cy - 44);
+    
+    int tableHeight = m_tableRect.Height();
+    int availableHeight = tableHeight - m_tableHeaderH - 4;
+    int calculatedPageSize = max(1, availableHeight / m_tableRowH);
+    
+    if (calculatedPageSize != m_pageSize) {
+        m_pageSize = calculatedPageSize;
+        m_currentPage = 0;
+        ReloadBooksPage();
+    }
+
+    m_detailsCardW = min(max(860, (int)(cx * 0.8)), cx - 24);
+    m_detailsCardH = min(max(400, (int)(cy * 0.8)), cy - 24);
 }
 
 BOOL CLibraryAppView::OnEraseBkgnd(CDC* pDC) {
@@ -530,6 +544,7 @@ void CLibraryAppView::ReloadBooksPage() {
 void CLibraryAppView::InitBooks() {
     ReloadBooksPage();
 }
+
 void CLibraryAppView::OnTimer(UINT_PTR nIDEvent) {
     bool needRedraw = false;
     if (m_screen == SCREEN_BOOK_LIST) {
@@ -863,11 +878,21 @@ void CLibraryAppView::DrawAnalyticsOverlay(CDC* pDC) {
     case 2: dataset = _T("Активність"); break;
     case 3: dataset = _T("Топ за рейтингом"); break;
     case 4: dataset = _T("Популярні книги"); break;
+    case 5: dataset = _T("Стани бронювань"); break;
+    case 6: dataset = _T("Оцінки відгуків"); break;
+    case 7: dataset = _T("Книги за десятиліттями"); break;
+    case 8: dataset = _T("Бронювання по філіях"); break;
+    case 9: dataset = _T("Доступні примірники"); break;
+    case 10: dataset = _T("Користувачі за ролями"); break;
+    case 11: dataset = _T("Топ авторів"); break;
+    case 12: dataset = _T("Бронювання по місяцях"); break;
+    case 13: dataset = _T("Відгуки по місяцях"); break;
+    case 14: dataset = _T("Книги за рейтингом"); break;
     default: dataset = _T("Загальна статистика"); break;
     }
 
     CString mode;
-    mode.Format(_T("%s | %s | %s  [%d/6]"), dataset.GetString(),
+    mode.Format(_T("%s | %s | %s  [%d/16]"), dataset.GetString(),
         m_chartPieMode ? _T("Кругова") : _T("Гістограма"),
         m_chart3DMode ? _T("3D") : _T("2D"),
         m_chartDataIndex + 1);
@@ -1222,11 +1247,14 @@ void CLibraryAppView::OnDraw(CDC* pDC) {
                 
                 if (c == 4) {
                     memDC.SetTextColor(RGB(230, 130, 0));
-                    memDC.DrawText(vals[c], &rcCell, DT_RIGHT | DT_VCENTER | DT_SINGLELINE);
-                    memDC.SetTextColor(RGB(60, 60, 60));
-                } else {
-                    memDC.DrawText(vals[c], &rcCell, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
                 }
+
+                memDC.DrawText(vals[c], &rcCell, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
+
+                if (c == 4) {
+                    memDC.SetTextColor(RGB(60, 60, 60));
+                }
+
                 x += w;
             }
 
@@ -1242,54 +1270,9 @@ void CLibraryAppView::OnDraw(CDC* pDC) {
         memDC.SetTextColor(RGB(100, 100, 100));
         memDC.DrawText(pageInfo, &rFooter, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
-        int btnW = 60;
-        int btnH = 20;
-        int btnY = m_tableRect.bottom + 4;
-        
-        CRect btnPrev(m_tableRect.left, btnY, m_tableRect.left + btnW, btnY + btnH);
-        CRect btnNext(m_tableRect.right - btnW, btnY, m_tableRect.right, btnY + btnH);
-
-        if (m_currentPage > 0) {
-            COLORREF btnColor = m_hoverBtnPrev ? RGB(0, 140, 240) : RGB(0, 120, 214);
-            memDC.FillSolidRect(&btnPrev, btnColor);
-            if (m_hoverBtnPrev) {
-                CPen pen(PS_SOLID, 2, RGB(255, 255, 255));
-                CPen* oldP = memDC.SelectObject(&pen);
-                memDC.MoveTo(btnPrev.left + 2, btnPrev.top + 2);
-                memDC.LineTo(btnPrev.right - 2, btnPrev.top + 2);
-                memDC.LineTo(btnPrev.right - 2, btnPrev.bottom - 2);
-                memDC.LineTo(btnPrev.left + 2, btnPrev.bottom - 2);
-                memDC.LineTo(btnPrev.left + 2, btnPrev.top + 2);
-                memDC.SelectObject(oldP);
-            }
-            memDC.SetTextColor(RGB(255, 255, 255));
-            memDC.SelectObject(&m_fontBold);
-            memDC.DrawText(_T("◄ Назад"), &btnPrev, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-            memDC.SelectObject(&m_fontNormal);
-        }
-
-        if (m_currentPage + 1 < m_totalPages) {
-            COLORREF btnColor = m_hoverBtnNext ? RGB(0, 140, 240) : RGB(0, 120, 214);
-            memDC.FillSolidRect(&btnNext, btnColor);
-            if (m_hoverBtnNext) {
-                CPen pen(PS_SOLID, 2, RGB(255, 255, 255));
-                CPen* oldP = memDC.SelectObject(&pen);
-                memDC.MoveTo(btnNext.left + 2, btnNext.top + 2);
-                memDC.LineTo(btnNext.right - 2, btnNext.top + 2);
-                memDC.LineTo(btnNext.right - 2, btnNext.bottom - 2);
-                memDC.LineTo(btnNext.left + 2, btnNext.bottom - 2);
-                memDC.LineTo(btnNext.left + 2, btnNext.top + 2);
-                memDC.SelectObject(oldP);
-            }
-            memDC.SetTextColor(RGB(255, 255, 255));
-            memDC.SelectObject(&m_fontBold);
-            memDC.DrawText(_T("Далі ►"), &btnNext, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-            memDC.SelectObject(&m_fontNormal);
-        }
-
         memDC.SetTextColor(RGB(0, 120, 214));
         memDC.SelectObject(&m_fontBold);
-        CString hint = _T("ПКМ: дії з книгою | ↑/↓: категорія | ←/→: сторінка | Клік по заголовку: сортування");
+        CString hint = _T("ЛКМ: обрати книгу | ПКМ: дії з книгою | ↑/↓: категорія | ←/→: сторінка | Клік по заголовку: сортування");
         CRect rHint(m_tableRect.left, m_tableRect.bottom + 26, m_tableRect.right, m_tableRect.bottom + 44);
         memDC.SetTextColor(RGB(160, 160, 160));
         memDC.SelectObject(&m_fontNormal);
@@ -1350,7 +1333,7 @@ void CLibraryAppView::DrawCharts() {
 
     std::vector<CategoryStat> stats;
     CString datasetTitle = _T("Книги за категоріями");
-    const int NUM_DATASETS = 6;
+    const int NUM_DATASETS = 16;
 
     if (m_chartDataIndex == 0) {
         stats = m_db.GetCategoryStats();
@@ -1385,6 +1368,51 @@ void CLibraryAppView::DrawCharts() {
             s.count = books[bi].quantityTotal;
             stats.push_back(s);
         }
+    }
+    else if (m_chartDataIndex == 5) {
+        datasetTitle = _T("Стани бронювань");
+        stats = m_db.GetReservationStatusStats();
+    }
+    else if (m_chartDataIndex == 6) {
+        datasetTitle = _T("Оцінки відгуків");
+        stats = m_db.GetRatingDistributionStats();
+        for (int i = 0; i < (int)stats.size(); ++i) {
+            CString label;
+            label.Format(_T("★%s"), stats[i].name.GetString());
+            stats[i].name = label;
+        }
+    }
+    else if (m_chartDataIndex == 7) {
+        datasetTitle = _T("Книги за десятиліттями");
+        stats = m_db.GetBooksByDecadeStats();
+    }
+    else if (m_chartDataIndex == 8) {
+        datasetTitle = _T("Бронювання по філіях");
+        stats = m_db.GetBranchReservationStats(10);
+    }
+    else if (m_chartDataIndex == 9) {
+        datasetTitle = _T("Доступні примірники");
+        stats = m_db.GetCategoryAvailabilityStats();
+    }
+    else if (m_chartDataIndex == 10) {
+        datasetTitle = _T("Користувачі за ролями");
+        stats = m_db.GetUsersByRoleStats();
+    }
+    else if (m_chartDataIndex == 11) {
+        datasetTitle = _T("Топ авторів");
+        stats = m_db.GetBooksByAuthorStats(10);
+    }
+    else if (m_chartDataIndex == 12) {
+        datasetTitle = _T("Бронювання по місяцях");
+        stats = m_db.GetReservationsByMonthStats(12);
+    }
+    else if (m_chartDataIndex == 13) {
+        datasetTitle = _T("Відгуки по місяцях");
+        stats = m_db.GetReviewsByMonthStats(12);
+    }
+    else if (m_chartDataIndex == 14) {
+        datasetTitle = _T("Книги за рейтингом");
+        stats = m_db.GetBooksByRatingBucketStats();
     }
     else {
         datasetTitle = _T("Загальна статистика");
@@ -1457,7 +1485,11 @@ void CLibraryAppView::DrawCharts() {
             glVertex3f(startX + totalWidth + 1.2f, gy, frontZ);
             glEnd();
             CString gLabel;
-            gLabel.Format(_T("%d"), gridVal);
+            if (m_chartDataIndex == 3) {
+                gLabel.Format(_T("%.1f"), gridVal / 10.0f);
+            } else {
+                gLabel.Format(_T("%d"), gridVal);
+            }
             DrawText3D(startX - 1.8f, gy - 0.08f, frontZ, gLabel, 0.50f, 0.54f, 0.62f);
         }
 
@@ -1537,7 +1569,11 @@ void CLibraryAppView::DrawCharts() {
             double lblScale = (estW > maxLabelW && estW > 0.01f) ? (double)(maxLabelW / estW) : 1.0;
             if (lblScale < 0.35) lblScale = 0.35;
             CString val;
-            val.Format(_T("%d"), stats[i].count);
+            if (m_chartDataIndex == 3) {
+                val.Format(_T("%.1f"), stats[i].count / 10.0f);
+            } else {
+                val.Format(_T("%d"), stats[i].count);
+            }
             float nameW = Measure3DTextWidth(name, lblScale);
             DrawText3D(x - nameW * 0.5f, baseY - 0.55f, frontZ + 0.1f, name, 0.20f, 0.24f, 0.32f, lblScale);
             float valW = Measure3DTextWidth(val);
@@ -1970,41 +2006,6 @@ void CLibraryAppView::DrawBook(float w, float h, float d, int texIdx, float r, f
     glDisable(GL_TEXTURE_2D);
 }
 
-int CLibraryAppView::PickBook(CPoint point) {
-    GLuint buf[512];
-    GLint vp[4];
-    glGetIntegerv(GL_VIEWPORT, vp);
-    glSelectBuffer(512, buf);
-    glRenderMode(GL_SELECT);
-    glInitNames();
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluPickMatrix((GLdouble)point.x, (GLdouble)(vp[3] - point.y), 5.0, 5.0, vp);
-    gluPerspective(45.0f, (GLfloat)vp[2] / (GLfloat)vp[3], 0.1f, 100.0f);
-    glMatrixMode(GL_MODELVIEW);
-    RenderScene(true);
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    GLint hits = glRenderMode(GL_RENDER);
-    if (hits <= 0) return -1;
-    GLuint minZ = 0xffffffff;
-    int idx = -1;
-    GLuint* p = buf;
-    for (int i = 0; i < hits; i++) {
-        GLuint names = *p++;
-        GLuint z1 = *p++;
-        p++;
-        if (z1 < minZ) {
-            minZ = z1;
-            idx = (int)(*p);
-        }
-        p += names;
-    }
-    return idx;
-}
-
 bool CLibraryAppView::EnsureLoggedIn() {
     if (m_db.IsLoggedIn()) return true;
     AfxMessageBox(_T("Спочатку увійдіть."));
@@ -2046,28 +2047,6 @@ void CLibraryAppView::OnLButtonDown(UINT nFlags, CPoint point) {
 
     CRect rc;
     GetClientRect(&rc);
-    int btnW = 60;
-    int btnH = 20;
-    int btnY = m_tableRect.bottom + 8;
-    
-    CRect btnPrev(m_tableRect.left, btnY, m_tableRect.left + btnW, btnY + btnH);
-    CRect btnNext(m_tableRect.right - btnW, btnY, m_tableRect.right, btnY + btnH);
-
-    if (btnPrev.PtInRect(point) && m_currentPage > 0) {
-        m_currentPage--;
-        ReloadBooksPage();
-        Invalidate(FALSE);
-        CView::OnLButtonDown(nFlags, point);
-        return;
-    }
-
-    if (btnNext.PtInRect(point) && m_currentPage + 1 < m_totalPages) {
-        m_currentPage++;
-        ReloadBooksPage();
-        Invalidate(FALSE);
-        CView::OnLButtonDown(nFlags, point);
-        return;
-    }
 
     if (!m_bInspectMode) {
         CRect headerRect(m_tableRect.left, m_tableRect.top, m_tableRect.right, m_tableRect.top + m_tableHeaderH);
@@ -2126,14 +2105,7 @@ void CLibraryAppView::OnLButtonDown(UINT nFlags, CPoint point) {
         CView::OnLButtonDown(nFlags, point);
         return;
     }
-    if (m_bInspectMode) {
-        int hit = PickBook(point);
-        if (hit == m_selectedIndex) {
-            m_isDragging = true;
-            m_lastMousePos = point;
-            SetCapture();
-        }
-    }
+
     CView::OnLButtonDown(nFlags, point);
 }
 
@@ -2363,7 +2335,7 @@ void CLibraryAppView::OnMouseMove(UINT nFlags, CPoint point) {
 BOOL CLibraryAppView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt) {
     (void)nFlags;
     (void)pt;
-    if (m_screen == SCREEN_ANALYTICS && m_chart3DMode) {
+    if (m_screen == SCREEN_ANALYTICS) {
         m_chartZoom += (zDelta > 0) ? 1.0f : -1.0f;
         if (m_chartZoom > -4.0f) m_chartZoom = -4.0f;
         if (m_chartZoom < -30.0f) m_chartZoom = -30.0f;
@@ -2459,8 +2431,8 @@ void CLibraryAppView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
             else if (nChar == 'A') m_chartRotY -= 4.0f;
             else if (nChar == 'D') m_chartRotY += 4.0f;
         }
-        if (nChar == VK_LEFT) m_chartDataIndex = (m_chartDataIndex + 5) % 6;
-        else if (nChar == VK_RIGHT) m_chartDataIndex = (m_chartDataIndex + 1) % 6;
+        if (nChar == VK_LEFT) m_chartDataIndex = (m_chartDataIndex + 15) % 16;
+        else if (nChar == VK_RIGHT) m_chartDataIndex = (m_chartDataIndex + 1) % 16;
         Invalidate(FALSE);
     }
     CView::OnKeyDown(nChar, nRepCnt, nFlags);
@@ -2480,6 +2452,7 @@ void CLibraryAppView::OnCmdLogin() {
     m_screen = SCREEN_BOOK_LIST;
     Invalidate(FALSE);
 }
+
 void CLibraryAppView::OnCmdRegister() {
     DAuth dlg(TRUE, this);
     if (dlg.DoModal() != IDOK) return;
@@ -2494,6 +2467,7 @@ void CLibraryAppView::OnCmdRegister() {
     m_screen = SCREEN_BOOK_LIST;
     Invalidate(FALSE);
 }
+
 void CLibraryAppView::OnCmdLogout() {
     m_db.Logout();
     m_screen = SCREEN_AUTH_REQUIRED;
@@ -2501,12 +2475,14 @@ void CLibraryAppView::OnCmdLogout() {
     m_selectedIndex = -1;
     Invalidate(FALSE);
 }
+
 void CLibraryAppView::OnCmdMainMenu() {
     if (EnsureLoggedIn()) {
         m_screen = SCREEN_BOOK_LIST;
         Invalidate(FALSE);
     }
 }
+
 void CLibraryAppView::OnCmdProfile() {
     if (EnsureLoggedIn()) {
         m_profileScrollY = 0.0f;
@@ -2514,52 +2490,7 @@ void CLibraryAppView::OnCmdProfile() {
         Invalidate(FALSE);
     }
 }
-void CLibraryAppView::OnCmdFilterSort() {
-    if (!EnsureLoggedIn()) return;
-    if (m_screen != SCREEN_BOOK_LIST)
-    {
-        m_screen = SCREEN_BOOK_LIST;
-    }
 
-    CMenu menu;
-    menu.CreatePopupMenu();
-    menu.AppendMenu(MF_STRING, ID_FILTER_PREV_CATEGORY, _T("Категорія: попередня (↑)"));
-    menu.AppendMenu(MF_STRING, ID_FILTER_NEXT_CATEGORY, _T("Категорія: наступна (↓)"));
-    menu.AppendMenu(MF_SEPARATOR);
-    menu.AppendMenu(MF_STRING, ID_FILTER_NEXT_SORT, _T("Сортування: змінити поле"));
-    menu.AppendMenu(MF_STRING, ID_FILTER_TOGGLE_DIR, _T("Сортування: змінити напрям"));
-    menu.AppendMenu(MF_SEPARATOR);
-    menu.AppendMenu(MF_STRING, ID_FILTER_RESET, _T("Скинути фільтр і сортування"));
-
-    CPoint pt;
-    ::GetCursorPos(&pt);
-    UINT cmd = menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_RETURNCMD, pt.x, pt.y, this);
-    switch (cmd)
-    {
-    case ID_FILTER_PREV_CATEGORY:
-        m_filter.PrevCategory();
-        break;
-    case ID_FILTER_NEXT_CATEGORY:
-        m_filter.NextCategory();
-        break;
-    case ID_FILTER_NEXT_SORT:
-        m_filter.NextSortMode();
-        break;
-    case ID_FILTER_TOGGLE_DIR:
-        m_filter.ToggleSortDirection();
-        break;
-    case ID_FILTER_RESET:
-        m_filter.SetCategories(m_db.GetAllCategories());
-        m_filter.SetSortMode(Filter::SORT_TITLE);
-        break;
-    default:
-        return;
-    }
-
-    m_currentPage = 0;
-    ReloadBooksPage();
-    Invalidate(FALSE);
-}
 void CLibraryAppView::OnCmdAddBook() {
     if (!EnsureAdmin()) return;
     DAddBook dlg(this);
@@ -2904,8 +2835,8 @@ void CLibraryAppView::DrawBookDetailsScreen(CDC* pDC) {
         return;
     }
 
-    int cardW = min(860, rc.Width() - 24);
-    int cardH = min(560, rc.Height() - 24);
+    int cardW = m_detailsCardW;
+    int cardH = m_detailsCardH;
     int cardX = (rc.Width() - cardW) / 2;
     int cardY = (rc.Height() - cardH) / 2;
     CRect card(cardX, cardY, cardX + cardW, cardY + cardH);
@@ -2918,7 +2849,7 @@ void CLibraryAppView::DrawBookDetailsScreen(CDC* pDC) {
     hdr.left += 12;
     hdr.right -= 12;
     pDC->SetTextColor(RGB(0, 100, 190));
-    CFont* old = pDC->SelectObject(&m_fontBold);
+    CFont* old = pDC->SelectObject(&m_fontTitle);
     pDC->DrawText(book.title, &hdr, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
     pDC->SelectObject(&m_fontNormal);
 
@@ -2967,7 +2898,7 @@ void CLibraryAppView::DrawBookDetailsScreen(CDC* pDC) {
     CString category; category.Format(_T("Категорія: %s"), book.category.GetString());
     pDC->DrawText(category, &CRect(infoX, infoY + lineH * 2, infoX + infoW, infoY + lineH * 3), DT_LEFT | DT_TOP);
 
-    CString rating; rating.Format(_T("Рейтинг: %.1f / 5"), book.rating);
+    CString rating; rating.Format(_T("Рейтинг: %.1f / 5.0"), book.rating);
     pDC->DrawText(rating, &CRect(infoX, infoY + lineH * 3, infoX + infoW, infoY + lineH * 4), DT_LEFT | DT_TOP);
 
     CString available; available.Format(_T("Доступно: %d / %d"), book.quantityAvailable, book.quantityTotal);

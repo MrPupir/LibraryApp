@@ -131,6 +131,16 @@ public:
     std::vector<CategoryStat> GetCategoryStats() const;
     void GetAvailabilityStats(int& availableCopies, int& issuedCopies) const;
     std::vector<CategoryStat> GetUserActivityStats() const;
+    std::vector<CategoryStat> GetReservationStatusStats() const;
+    std::vector<CategoryStat> GetRatingDistributionStats() const;
+    std::vector<CategoryStat> GetBooksByDecadeStats() const;
+    std::vector<CategoryStat> GetBranchReservationStats(int limit = 10) const;
+    std::vector<CategoryStat> GetCategoryAvailabilityStats() const;
+    std::vector<CategoryStat> GetUsersByRoleStats() const;
+    std::vector<CategoryStat> GetBooksByAuthorStats(int limit = 10) const;
+    std::vector<CategoryStat> GetReservationsByMonthStats(int limit = 12) const;
+    std::vector<CategoryStat> GetReviewsByMonthStats(int limit = 12) const;
+    std::vector<CategoryStat> GetBooksByRatingBucketStats() const;
     AnalyticsData GetAnalytics() const;
     std::vector<BookRecord> GetTopRatedBooks(int limit = 5) const;
     std::vector<BookRecord> GetMostReservedBooks(int limit = 5) const;

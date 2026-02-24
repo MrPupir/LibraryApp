@@ -109,6 +109,9 @@ public:
     float m_detailsScrollY;
     float m_profileScrollY;
     Filter m_filter;
+    
+    int m_detailsCardW;
+    int m_detailsCardH;
 
     virtual void OnDraw(CDC* pDC);
     virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -132,7 +135,6 @@ public:
     afx_msg void OnCmdLogout();
     afx_msg void OnCmdMainMenu();
     afx_msg void OnCmdProfile();
-    afx_msg void OnCmdFilterSort();
 
     afx_msg void OnCmdAddBook();
     afx_msg void OnCmdEditBook();
@@ -176,7 +178,6 @@ protected:
     void DrawCharts();
     void DrawShelf(float width, float depth);
     void RenderScene(bool bPicking);
-    int PickBook(CPoint point);
     void DrawInfoOverlay(CDC* pDC);
     void UpdateAnimations();
     void ReloadBooksPage();
